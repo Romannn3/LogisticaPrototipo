@@ -11,6 +11,7 @@ env/
 # SQLite & Session Databases
 instance/
 *.db
+!agrologistica.db
 *.sqlite3
 
 # IDE

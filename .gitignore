@@ -14,6 +14,7 @@ backend/__pycache__/
 backend/*.py[cod]
 backend/*$py.class
 backend/*.db
+!backend/agrologistica.db
 backend/*.sqlite3
 backend/instance/
 backend/.env

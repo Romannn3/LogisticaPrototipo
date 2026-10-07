@@ -46,13 +46,20 @@ def get_session_engine(session_id: str):
     if safe_id not in _ENGINES_CACHE:
         db_path = get_session_db_path(safe_id)
         
-        # Si la base de datos de la sesión no existe, clonar la master seed
+        # Si la base de datos de la sesión no existe o quedó vacía (< 10 KB)
+        is_corrupt_or_empty = os.path.exists(db_path) and os.path.getsize(db_path) < 10000
+        if is_corrupt_or_empty:
+            try:
+                os.remove(db_path)
+            except Exception:
+                pass
+
         if not os.path.exists(db_path):
-            if os.path.exists(MASTER_DB_PATH):
+            if os.path.exists(MASTER_DB_PATH) and os.path.getsize(MASTER_DB_PATH) >= 10000:
                 shutil.copyfile(MASTER_DB_PATH, db_path)
-                logger.info(f"✨ [Session Sandbox] Creada nueva BD aislada para sesión '{safe_id}'")
+                logger.info(f"✨ [Session Sandbox] Creada nueva BD para '{safe_id}' desde master seed.")
             else:
-                logger.warning(f"⚠️ [Session Sandbox] Master DB no encontrada en {MASTER_DB_PATH}.")
+                logger.warning(f"⚠️ [Session Sandbox] Master DB no encontrada o vacía en {MASTER_DB_PATH}.")
 
         # Engine SQLite con check_same_thread=False para admitir Flask threads
         _ENGINES_CACHE[safe_id] = create_engine(
