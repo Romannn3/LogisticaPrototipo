@@ -91,4 +91,4 @@ La aplicacion esta preparada para subirse a servicios en la nube gratuitos o de 
   Se sube seleccionando la carpeta `frontend` como directorio raiz. El proyecto incluye el archivo `vercel.json` necesario para que la navegacion entre rutas funcione correctamente al refrescar la pagina. Debe configurarse la variable de entorno `VITE_API_BASE_URL` apuntando a la direccion publica del backend.
 
 - Backend (Render o Railway):
-  Se despliega seleccionando la carpeta `backend` como un Web Service en Python. El repositorio incluye un archivo `Procfile` configurado para iniciar el servidor de manera segura utilizando Gunicorn.
+  Se despliega seleccionando la carpeta `backend` como un Web Service en Python. El repositorio incluye un archivo `Procfile` configurado para iniciar el servidor de manera segura utilizando Gunicorn (`gunicorn -w 2 -b 0.0.0.0:$PORT run:app`).
