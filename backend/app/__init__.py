@@ -61,4 +61,8 @@ def create_app():
     app.register_blueprint(viajes_api, url_prefix='/api/viajes')
     app.register_blueprint(recursos_api, url_prefix='/api/recursos')
 
+    @app.route('/')
+    def root_health():
+        return {"status": "ok", "app": "PrototipoLogistico API"}, 200
+
     return app

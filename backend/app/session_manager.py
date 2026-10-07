@@ -28,9 +28,20 @@ def get_session_db_path(session_id: str) -> str:
     safe_id = sanitize_session_id(session_id)
     return os.path.join(SESSIONS_DIR, f"{safe_id}.db")
 
+def ensure_master_db():
+    """Si la master DB no existe en el entorno (ej: deploy nuevo en Render), se genera y puebla con seed_data."""
+    if not os.path.exists(MASTER_DB_PATH):
+        logger.info(f"⚙️ [Session Sandbox] Creando y poblando Master DB inicial en {MASTER_DB_PATH}...")
+        try:
+            from seed_data import seed
+            seed()
+        except Exception as e:
+            logger.error(f"Error generando seed de la base master: {e}")
+
 def get_session_engine(session_id: str):
     """Obtiene o crea un SQLite Engine exclusivo para la sesión de demostración."""
     safe_id = sanitize_session_id(session_id)
+    ensure_master_db()
     
     if safe_id not in _ENGINES_CACHE:
         db_path = get_session_db_path(safe_id)
@@ -41,7 +52,7 @@ def get_session_engine(session_id: str):
                 shutil.copyfile(MASTER_DB_PATH, db_path)
                 logger.info(f"✨ [Session Sandbox] Creada nueva BD aislada para sesión '{safe_id}'")
             else:
-                logger.warning(f"⚠️ [Session Sandbox] Master DB no encontrada en {MASTER_DB_PATH}, usando base en blanco.")
+                logger.warning(f"⚠️ [Session Sandbox] Master DB no encontrada en {MASTER_DB_PATH}.")
 
         # Engine SQLite con check_same_thread=False para admitir Flask threads
         _ENGINES_CACHE[safe_id] = create_engine(
@@ -54,6 +65,7 @@ def get_session_engine(session_id: str):
 def reset_session_db(session_id: str) -> bool:
     """Restaura la base de datos de una sesión clonando nuevamente la base original."""
     safe_id = sanitize_session_id(session_id)
+    ensure_master_db()
     db_path = get_session_db_path(safe_id)
 
     # Disponer el engine si está en cache
