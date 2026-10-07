@@ -1,0 +1,18 @@
+# Python & Virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.env*
+venv/
+env/
+.venv/
+
+# SQLite & Session Databases
+instance/
+*.db
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/

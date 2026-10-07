@@ -1,0 +1,29 @@
+# Archivos de diseno y prompts del MVP (no versionados)
+mvp_*.md
+logistic-web-app-design.zip
+logistic-web-app-design/
+
+# Entorno y dependencias Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# Python / Backend
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/*.db
+backend/*.sqlite3
+backend/instance/
+backend/.env
+backend/.env.*
+backend/venv/
+backend/env/
+backend/.venv/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
